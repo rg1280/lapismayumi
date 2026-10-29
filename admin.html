@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>予約管理 | Lapis Mayumi</title>
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lapis予約">
+<meta name="theme-color" content="#0d0d45">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Shippori+Mincho:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/admin.css">
+</head>
+<body class="admin">
+<header class="top"><div class="in">
+  <img src="assets/logo-640.png" alt=""><div><div class="name">Lapis Mayumi</div><div class="sub">予約管理</div></div>
+  <button id="reload" class="icon-btn" type="button" aria-label="最新にする">↻</button>
+</div></header>
+<div id="demoBar" class="demo-bar hidden">見本モード（合言葉は demo）。データはこの端末の中だけに保存されます</div>
+
+<!-- ログイン -->
+<main class="wrap hidden" id="login">
+  <div class="card" style="margin-top:28px">
+    <h2 class="sec" style="margin-top:0">合言葉を入れてください</h2>
+    <input type="password" id="key" autocomplete="current-password">
+    <p class="err hidden" id="loginErr"></p>
+    <button class="btn btn-main" id="loginBtn" type="button" style="margin-top:14px">開く</button>
+  </div>
+</main>
+
+<main class="wrap hidden" id="app">
+  <!-- 要対応 -->
+  <section id="tabTodo">
+    <h2 class="sec">要対応<small>Webからの申し込み（仮予約）</small></h2>
+    <div id="todoList"></div>
+  </section>
+
+  <!-- 予定表 -->
+  <section id="tabList" class="hidden">
+    <h2 class="sec">予定表<small>確定・仮予約・ふさいだ時間</small></h2>
+    <label class="agree" style="margin-bottom:10px"><input type="checkbox" id="showPast">終わった予約・キャンセルも表示する</label>
+    <div id="schedule"></div>
+  </section>
+
+  <!-- 追加 -->
+  <section id="tabAdd" class="hidden">
+    <div class="seg" id="addSeg"><button type="button" class="on" data-k="res">予約を入れる</button><button type="button" data-k="block">時間をふさぐ</button></div>
+    <form id="resForm" class="card" novalidate></form>
+    <form id="blockForm" class="card hidden" novalidate>
+      <p class="note" style="margin-top:0">お休み・私用など、予約を受けたくない時間を✖にします。</p>
+      <div class="field"><label for="bDay">日にち</label><input type="date" id="bDay"></div>
+      <label class="agree" style="margin-bottom:14px"><input type="checkbox" id="bAll">終日（この日はお休み）</label>
+      <div class="two" id="bTimes">
+        <div class="field"><label for="bStart">開始</label><input type="time" id="bStart" step="1800" value="10:00"></div>
+        <div class="field"><label for="bEnd">終了</label><input type="time" id="bEnd" step="1800" value="12:00"></div>
+      </div>
+      <div class="field"><label for="bTitle">メモ</label><input type="text" id="bTitle" placeholder="例）私用・お休み"></div>
+      <button class="btn btn-main" type="submit">ふさぐ</button>
+    </form>
+  </section>
+
+  <!-- 設定 -->
+  <section id="tabSet" class="hidden">
+    <h2 class="sec">設定</h2>
+    <div class="card">
+      <div class="field">
+        <span class="lbl">定休日（毎週）</span>
+        <div class="choice wd" id="sWd"></div>
+      </div>
+      <div class="field">
+        <label for="sPlace">施術場所（確定のご連絡に入れる文）</label>
+        <textarea id="sPlace" placeholder="例）Lapis Mayumi 大府店&#10;愛知県大府市○○町1-2-3"></textarea>
+      </div>
+      <label class="agree" style="margin-bottom:16px"><input type="checkbox" id="sOwnCal">自分のGoogleカレンダー（Life Bear）の予定がある時間も✖にする</label>
+      <button class="btn btn-main" id="saveSet" type="button">保存する</button>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <button class="btn btn-ghost" id="logout" type="button">合言葉を消してログアウト</button>
+      <button class="btn btn-ghost hidden" id="resetDemo" type="button">見本データを最初に戻す</button>
+    </div>
+  </section>
+</main>
+
+<nav class="tabbar hidden" id="tabbar">
+  <button type="button" data-tab="tabTodo" class="on"><i>☾</i>要対応<em id="badge" class="hidden"></em></button>
+  <button type="button" data-tab="tabList"><i>▤</i>予定表</button>
+  <button type="button" data-tab="tabAdd"><i>＋</i>追加</button>
+  <button type="button" data-tab="tabSet"><i>⚙</i>設定</button>
+</nav>
+
+<!-- 下から出る画面 -->
+<div class="sheet-bg hidden" id="sheetBg"><div class="sheet" id="sheet"></div></div>
+
+<script src="assets/config.js"></script>
+<script src="assets/slots.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/admin.js"></script>
+</body>
+</html>

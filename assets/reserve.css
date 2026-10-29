@@ -1,0 +1,135 @@
+/* 予約画面だけの見た目（クロードデザイン「月夜のラピス」） */
+body.rsv { background: var(--bg); }
+
+/* 夜空のヘッダー */
+.sky { position: relative; overflow: hidden; background: var(--night-grad); color: #fff; text-align: center; }
+.sky svg.deco { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sky .in { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: inherit; }
+.sky.big { height: 210px; display: flex; align-items: center; justify-content: center; }
+.sky.big img { width: 84px; height: 84px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,.35), 0 10px 30px rgba(0,0,0,.35); }
+.sky.big .nm { font-family: var(--latin); font-size: 28px; letter-spacing: .06em; line-height: 1.1; }
+.sky.big .tg { font-family: var(--serif); font-size: 13px; letter-spacing: .3em; opacity: .85; }
+.sky.small { height: 72px; display: flex; align-items: center; padding: 0 16px; }
+.sky.small .in { flex-direction: row; gap: 12px; text-align: left; max-width: 560px; margin: 0 auto; width: 100%; }
+.sky.small img { width: 44px; height: 44px; border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,.35); }
+.sky.small .nm { font-family: var(--latin); font-size: 22px; letter-spacing: .05em; line-height: 1; display: block; }
+.sky.small .tg { font-family: var(--serif); font-size: 11px; letter-spacing: .25em; opacity: .85; display: block; margin-top: 2px; }
+
+/* 手順 */
+.flow3 { display: flex; align-items: center; justify-content: space-between; padding: 0 6px; margin: 20px 0 4px; }
+.flow3 .st { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 90px; font-size: 11px; color: var(--sub); }
+.flow3 .dot { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #cfcae6; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; box-sizing: border-box; }
+.flow3 .st.now { color: var(--deep); font-weight: 700; }
+.flow3 .st.now .dot { background: var(--deep); border: 0; }
+.flow3 .st.done .dot { background: #e3def4; border: 0; }
+.flow3 .bar { flex: 1; height: 1px; background: #cfcae6; margin-bottom: 18px; }
+.flow3 .bar.on { background: var(--deep); }
+
+/* 見出し */
+.ttl { display: flex; align-items: baseline; gap: 10px; margin: 24px 0 12px; }
+.ttl .en { font-family: var(--latin); font-style: italic; font-size: 20px; color: var(--indigo); }
+.ttl h2 { margin: 0; font-family: var(--serif); font-size: 18px; font-weight: 600; }
+.ttl .hint { margin-left: auto; font-size: 12px; color: var(--sub); }
+
+/* コース */
+.rsv .courses { gap: 8px; }
+.rsv .courses button { height: 84px; border-radius: 18px; border: 1px solid #e0dcef; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 0; box-shadow: none; }
+.rsv .courses button b { font-family: var(--latin); font-size: 30px; font-weight: 600; line-height: 1; }
+.rsv .courses button b small { font-family: var(--sans); font-size: 12px; font-weight: 500; margin-left: 2px; }
+.rsv .courses button span { font-size: 13px; font-weight: 500; color: inherit; }
+.rsv .courses button.on { border: 0; background: var(--btn-grad); color: #fff; box-shadow: 0 8px 20px rgba(47,47,181,.28); }
+.rsv .courses button.on span { color: #fff; }
+.taxnote { margin: 8px 0 0; font-size: 11px; color: var(--sub); text-align: right; }
+
+/* 日時の表（横は自前で動かすので、ブラウザには縦のスクロールだけ任せる） */
+.rsv #grid { touch-action: pan-y; user-select: none; -webkit-user-select: none; will-change: transform; }
+.rsv #grid img, .rsv #grid svg { -webkit-user-drag: none; pointer-events: none; }
+.rsv .cal { border: 0; border-radius: 22px; box-shadow: 0 1px 0 var(--line), 0 12px 30px rgba(18,18,79,.06); }
+.rsv .cal-nav { padding: 10px; border-bottom: 0; }
+.rsv .cal-nav button { height: 44px; padding: 0 14px; border-radius: 22px; border: 0; background: var(--deep); color: #fff; font-size: 13px; }
+.rsv .cal-nav button:disabled { background: #fff; border: 1px solid var(--line); color: #b3afcb; }
+.rsv .cal-nav .range { font-family: var(--latin); font-size: 18px; font-weight: 600; color: var(--deep); }
+.rsv .cal th, .rsv .cal td { border-color: #eeebf6; }
+.rsv .cal td.s { border-left-color: #f1eef8; }
+.rsv .cal .month th { background: #fff; font-size: 11px; color: var(--sub); }
+.rsv .cal .dates th { background: #fff; padding: 6px 0 10px; }
+.rsv .cal .dates th b { font-family: var(--latin); font-size: 20px; font-weight: 600; width: 30px; height: 30px; border-radius: 50%; margin: 0 auto 2px; display: flex; align-items: center; justify-content: center; }
+.rsv .cal .dates th.today b { background: var(--indigo-soft); color: var(--deep); }
+.rsv .cal .dates th span { font-size: 10px; }
+.rsv .cal .time { font-size: 12px; font-weight: 500; height: 46px; font-variant-numeric: tabular-nums; }
+.rsv .cal td.s, .rsv .cal td.s button { height: 46px; }
+.rsv .cal td.s button { display: flex; align-items: center; justify-content: center; }
+.rsv .cal td.s button:active { background: var(--indigo-soft); }
+.rsv .cal td.s.ng svg { display: block; margin: 0 auto; }
+.rsv .cal td.s.out { background: #f8f7fc; }
+.rsv .legend { gap: 18px; font-size: 12px; align-items: center; padding: 0 4px; margin: 12px 0 4px; }
+.rsv .legend span { display: flex; align-items: center; gap: 6px; }
+.rsv .swipe-hint { font-size: 11px; }
+.hours-note { margin: 12px 0 0; padding: 12px 16px; border-radius: 16px; background: var(--indigo-soft); font-size: 12px; line-height: 1.8; color: var(--ink); }
+.hours-note b { color: var(--deep); }
+.hours-note a { color: var(--indigo); font-weight: 700; }
+
+.wish-card { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 14px; padding: 16px 18px; border-radius: 18px; border: 1px solid #d9d4ee; background: #fff; color: var(--ink); cursor: pointer; text-align: left; }
+.wish-card .tx { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.wish-card .tx b { font-size: 14px; }
+.wish-card .tx small { font-size: 12px; color: var(--sub); }
+.wish-card .arrow { color: var(--indigo); font-size: 18px; }
+.wish-card.last { border-color: var(--indigo); }
+
+/* 入力 */
+.sum-card { position: relative; overflow: hidden; border-radius: 22px; padding: 18px 20px; background: var(--btn-grad); color: #fff; display: flex; flex-direction: column; gap: 10px; margin: 20px 0 16px; }
+.sum-card svg.deco { position: absolute; right: -6px; top: -4px; opacity: .55; pointer-events: none; }
+.sum-card .it { display: flex; flex-direction: column; gap: 2px; position: relative; }
+.sum-card .it small { font-size: 11px; letter-spacing: .15em; opacity: .75; }
+.sum-card .it b { font-size: 17px; }
+.sum-card .it .pr { font-family: var(--latin); font-size: 20px; font-weight: 600; margin-left: 8px; }
+.sum-card button { align-self: flex-start; position: relative; background: none; border: 0; border-bottom: 1px solid rgba(255,255,255,.6); color: #fff; font-size: 12px; padding: 6px 0; cursor: pointer; }
+.rsv .card { border: 0; border-radius: 22px; padding: 22px 18px; box-shadow: 0 1px 0 var(--line), 0 12px 30px rgba(18,18,79,.06); }
+.rsv .field { margin-bottom: 20px; }
+.rsv .field > label, .rsv .field > .lbl { font-size: 14px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.rsv .req { background: none; color: var(--sun); border: 1px solid #e8c3d1; border-radius: 10px; padding: 0 8px; font-size: 10px; margin: 0; vertical-align: 0; }
+.rsv .opt { background: none; color: var(--sub); border: 1px solid var(--field-line); border-radius: 10px; padding: 0 8px; font-size: 10px; margin: 0; vertical-align: 0; }
+.rsv input[type=text], .rsv input[type=tel], .rsv select, .rsv textarea { height: 50px; border-radius: 14px; border: 1px solid var(--field-line); background: #fbfafe; padding: 0 14px; }
+.rsv textarea { height: 96px; padding: 12px 14px; }
+.rsv input:focus, .rsv select:focus, .rsv textarea:focus { border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(47,47,181,.14); background: #fff; }
+.rsv .choice { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.rsv .choice label { height: 48px; border-radius: 24px; border: 1px solid var(--field-line); background: #fff; display: flex; align-items: center; justify-content: center; padding: 0; font-size: 14px; min-width: 0; }
+.rsv .choice label:has(input:checked) { border: 0; background: var(--deep); color: #fff; font-weight: 700; }
+.rsv #fPhoto { padding: 16px; border-radius: 16px; background: var(--bg); }
+.rsv .warn { border-radius: 16px; font-size: 12px; line-height: 1.85; color: var(--warn-ink); padding: 14px 16px; margin: 4px 0 16px; }
+.rsv .warn h3 { font-size: 13px; color: #6b5426; display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.rsv .agree { align-items: center; min-height: 44px; }
+.rsv .agree input { width: 22px; height: 22px; margin: 0; }
+.rsv .btn-main { height: 56px; padding: 0; border-radius: 28px; background: var(--btn-grad); letter-spacing: .08em; box-shadow: 0 10px 24px rgba(47,47,181,.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.rsv .btn-ghost { height: 50px; padding: 0; border-radius: 25px; border: 1px solid #cfcae6; color: var(--deep); font-weight: 500; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+.rsv .btn-line { height: 52px; padding: 0; border-radius: 26px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.rsv .err { color: var(--sun); }
+.rsv .field.bad input, .rsv .field.bad select, .rsv .field.bad textarea { border-color: var(--sun); }
+
+/* 最後：LINEで送信（「完了した」と思われないよう、まだ途中であることを先に見せる） */
+.step-alert { margin: 18px 0 14px; padding: 20px 18px; border-radius: 22px; border: 2px solid var(--sun); background: #fff6f9; text-align: center; }
+.step-alert .badge { display: inline-block; padding: 3px 14px; border-radius: 999px; background: var(--sun); color: #fff; font-size: 12px; font-weight: 700; letter-spacing: .1em; }
+.step-alert h2 { margin: 10px 0 6px; font-family: var(--serif); font-size: 19px; color: var(--sun); }
+.step-alert p { margin: 0; font-size: 13px; line-height: 1.8; }
+.send-card { background: #fff; border-radius: 22px; padding: 20px 18px; box-shadow: 0 1px 0 var(--line), 0 12px 30px rgba(18,18,79,.06); display: flex; flex-direction: column; gap: 14px; }
+.send-card .rno { display: flex; align-items: baseline; justify-content: center; gap: 10px; }
+.send-card .rno small { font-size: 12px; color: var(--sub); }
+.send-card .rno b { font-family: var(--latin); font-size: 30px; font-weight: 600; color: var(--deep); letter-spacing: .06em; }
+.send-card dl { margin: 0; border-top: 1px dashed var(--field-line); border-bottom: 1px dashed var(--field-line); padding: 12px 0; display: grid; grid-template-columns: 84px minmax(0, 1fr); row-gap: 6px; font-size: 13px; }
+.send-card dt { color: var(--sub); }
+.send-card dd { margin: 0; font-weight: 700; }
+.rsv .btn-send { height: 60px; border-radius: 30px; font-size: 16px; font-weight: 700; gap: 8px; box-shadow: 0 10px 24px rgba(6,199,85,.3); animation: lm-pulse 2s ease-in-out infinite; }
+@keyframes lm-pulse { 50% { transform: scale(1.025); } }
+@media (prefers-reduced-motion: reduce) { .rsv .btn-send { animation: none; } }
+.send-card .how { margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8; }
+.send-card .how small { display: block; font-size: 11px; color: var(--sub); }
+.send-card .why { margin: 0; font-size: 12px; line-height: 1.8; color: var(--sub); background: var(--bg); border-radius: 12px; padding: 10px 12px; }
+.send-card .manual summary { font-size: 13px; color: var(--indigo); cursor: pointer; padding: 4px 0; }
+.send-card .manual p { font-size: 12px; margin: 8px 0; }
+.send-card .manual .btn { margin-top: 8px; }
+.send-card .msgbox { white-space: pre-wrap; font-size: 13px; line-height: 1.7; background: var(--bg); border-radius: 12px; padding: 12px; user-select: all; -webkit-user-select: all; }
+.after-card { margin-top: 14px; padding: 18px; border-radius: 22px; background: var(--indigo-soft); }
+.after-card h3 { margin: 0 0 6px; font-size: 13px; color: var(--deep); }
+.after-card p.msg { margin: 0; font-family: var(--serif); font-size: 14px; line-height: 1.9; }
+.rsv .foot { font-family: var(--latin); font-size: 13px; letter-spacing: .08em; }
+.rsv.page-done .foot { display: none; }

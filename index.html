@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lapis Mayumi | リラクゼーションサロン</title>
+<meta name="description" content="Lapis Mayumi（ラピス マユミ）は、心と体をゆるめるリラクゼーションサロンです。60分・90分・120分のコースをご用意しています。ご予約はWebまたは公式LINEから。">
+<meta property="og:title" content="Lapis Mayumi | リラクゼーションサロン">
+<meta property="og:description" content="心と体をゆるめるリラクゼーションサロン。ご予約はWebまたは公式LINEから。">
+<meta property="og:image" content="assets/logo-640.png">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Shippori+Mincho:wght@500;600&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .hero { position: relative; overflow: hidden; color: #fff; text-align: center; padding: 56px 16px 64px;
+          background: radial-gradient(120% 80% at 80% 0%, #3434c8 0%, #17177a 45%, #06062a 100%); }
+  .hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .7;
+    background-image: radial-gradient(1.4px 1.4px at 12% 20%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 28% 64%, #fff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 72% 18%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 86% 52%, #fff 50%, transparent 51%),
+      radial-gradient(1.6px 1.6px at 58% 82%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 8% 78%, #fff 50%, transparent 51%),
+      radial-gradient(1.2px 1.2px at 40% 10%, #fff 50%, transparent 51%), radial-gradient(1px 1px at 94% 86%, #fff 50%, transparent 51%); }
+  .hero img { width: min(64vw, 260px); border-radius: 50%; box-shadow: 0 0 0 1px rgba(255,255,255,.25), 0 20px 60px rgba(0,0,0,.45); position: relative; }
+  .hero h1 { font-family: var(--serif); font-weight: 500; font-size: 21px; letter-spacing: .12em; margin: 28px 0 6px; position: relative; }
+  .hero p { font-size: 13px; letter-spacing: .2em; opacity: .8; margin: 0 0 28px; position: relative; }
+  .hero .cta { max-width: 360px; margin: 0 auto; position: relative; }
+  .hero .btn-ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+  section.blk { max-width: 640px; margin: 0 auto; padding: 48px 16px 8px; }
+  .blk h2 { text-align: center; font-family: var(--latin); font-weight: 500; font-size: 30px; letter-spacing: .08em; margin: 0; color: var(--deep); }
+  .blk h2 + .ja { text-align: center; font-size: 12px; letter-spacing: .25em; color: var(--sub); margin: 0 0 24px; }
+  .lead { font-family: var(--serif); font-size: 16px; line-height: 2.1; text-align: center; }
+  .menu { display: grid; gap: 12px; }
+  .menu .item { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; display: flex; align-items: center; gap: 16px; }
+  .menu .min { font-family: var(--latin); font-size: 38px; font-weight: 500; color: var(--indigo); line-height: 1; width: 86px; text-align: center; flex: none; }
+  .menu .min small { font-size: 14px; font-family: var(--sans); }
+  .menu .txt b { display: block; font-size: 16px; }
+  .menu .txt span { font-size: 13px; color: var(--sub); }
+  .menu .price { margin-left: auto; font-weight: 700; white-space: nowrap; }
+  .ways { display: grid; gap: 12px; }
+  .hours { margin: 0 0 16px; padding: 18px 20px; border-radius: var(--radius); background: var(--indigo-soft); text-align: center; }
+  .hours p { margin: 0; }
+  .hours-t { font-size: 12px; letter-spacing: .2em; color: var(--sub); }
+  .hours-v { margin-top: 4px !important; font-family: var(--latin); font-size: 26px; font-weight: 600; color: var(--deep); }
+  .hours-v small { font-family: var(--sans); font-size: 12px; font-weight: 500; color: var(--sub); }
+  .hours-n { margin-top: 6px !important; font-size: 13px; line-height: 1.8; }
+  .way { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 18px; }
+  .way h3 { margin: 0 0 4px; font-size: 16px; }
+  .way p { margin: 0 0 14px; font-size: 14px; color: var(--sub); }
+  .flow { counter-reset: f; list-style: none; padding: 0; margin: 0 0 14px; font-size: 14px; }
+  .flow li { counter-increment: f; padding-left: 30px; position: relative; margin-bottom: 6px; }
+  .flow li::before { content: counter(f); position: absolute; left: 0; top: 2px; width: 22px; height: 22px; border-radius: 50%; background: var(--indigo-soft); color: var(--indigo); font-size: 12px; text-align: center; line-height: 22px; font-weight: 700; }
+  img.photo { width: 100%; height: auto; display: block; border-radius: var(--radius); box-shadow: 0 12px 30px rgba(18,18,79,.10); }
+  .treat { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .treat figure { margin: 0; }
+  .treat img.photo { aspect-ratio: 3 / 4; object-fit: cover; }
+  .treat figcaption { text-align: center; font-family: var(--serif); font-size: 13px; margin-top: 8px; color: var(--deep); }
+  .pay { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 6px 18px; }
+  .pay .g { padding: 14px 0; border-bottom: 1px dashed var(--line); }
+  .pay .g:last-child { border-bottom: 0; }
+  .pay h3 { font-size: 14px; margin: 0 0 8px; color: var(--deep); }
+  .pay .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pay .chips span { font-size: 12px; background: var(--indigo-soft); color: var(--indigo); border-radius: 999px; padding: 3px 10px; }
+  .sns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 10px; }
+  .sns a { font-size: 14px; border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 8px 16px; text-decoration: none; }
+  footer { margin-top: 48px; background: var(--deep); color: rgba(255,255,255,.75); text-align: center; padding: 28px 16px; font-size: 12px; }
+  footer .n { font-family: var(--latin); font-size: 22px; color: #fff; letter-spacing: .06em; }
+  .fix-cta { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.95); border-top: 1px solid var(--line); display: none; z-index: 10; }
+  .fix-cta .in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .fix-cta .btn { padding: 12px; font-size: 14px; }
+  .fix-cta.show { display: block; }
+</style>
+</head>
+<body>
+<header class="hero">
+  <img src="assets/logo-640.png" alt="Lapis Mayumi">
+  <h1>心と体を、そっとゆるめる時間</h1>
+  <p>RELAXATION SALON ／ 完全予約制</p>
+  <div class="cta">
+    <a class="btn btn-main" href="reserve.html" style="background:#fff;color:var(--deep)">Webで予約を申し込む</a>
+    <a class="btn btn-ghost js-line" href="#" style="margin-top:10px">公式LINEで予約・相談する</a>
+  </div>
+</header>
+
+<section class="blk">
+  <h2>Concept</h2><p class="ja">コンセプト</p>
+  <p class="lead">その場しのぎではなく、<br><b style="color:var(--indigo)">コリの根本を取る施術</b>を。<br>おひとりおひとりのお悩みに合わせて、<br>ていねいに施術いたします。</p>
+  <p class="lead" style="font-size:14px;color:var(--sub)">完全予約制のプライベートサロンです。</p>
+</section>
+
+<section class="blk">
+  <h2>Salon</h2><p class="ja">サロンの様子</p>
+  <img class="photo" src="assets/room.jpg" alt="Lapis Mayumi の施術室。窓から自然光が入る静かな個室に施術ベッドがあります" width="960" height="1280" loading="lazy">
+  <p class="lead" style="font-size:14px;margin-top:16px">やわらかな自然光が入る、落ち着いた個室です。<br>周りを気にせず、ゆったりとお過ごしください。</p>
+</section>
+
+<section class="blk">
+  <h2>Treatment</h2><p class="ja">施術の様子</p>
+  <div class="treat">
+    <figure><img class="photo" src="assets/treat1.jpg" alt="気になる箇所をピンポイントで施術している様子" width="540" height="756" loading="lazy"><figcaption>ピンポイント施術</figcaption></figure>
+    <figure><img class="photo" src="assets/treat2.jpg" alt="奥のコリに届くよう体重をかけて施術している様子" width="540" height="716" loading="lazy"><figcaption>奥のコリに届く施術</figcaption></figure>
+  </div>
+  <p class="lead" style="font-size:14px;margin-top:16px">気になるところを見きわめ、<br>表面だけでなく奥のコリまでしっかりとほぐします。</p>
+</section>
+
+<section class="blk">
+  <h2>Menu</h2><p class="ja">メニュー</p>
+  <div class="menu" id="menu"></div>
+  <p class="note" style="text-align:right">料金はすべて税込です</p>
+</section>
+
+<section class="blk">
+  <h2>Payment</h2><p class="ja">お支払い方法</p>
+  <div class="pay" id="pay"></div>
+</section>
+
+<section class="blk">
+  <h2>Reservation</h2><p class="ja">ご予約方法</p>
+  <div class="hours">
+    <p class="hours-t">受付時間</p>
+    <p class="hours-v">10:00 〜 17:00 <small>（最終受付）</small></p>
+    <p class="hours-n">それ以外のお時間をご希望の方は、<br>公式LINEから直接お問い合わせください。</p>
+  </div>
+  <div class="ways">
+    <div class="way">
+      <h3>Webで申し込む（初めての方におすすめ）</h3>
+      <p>空いている日時を見ながら、24時間いつでもお申し込みいただけます。</p>
+      <ol class="flow">
+        <li>メニューと日時を選ぶ</li>
+        <li>お名前などを入力して送信（仮予約）</li>
+        <li>公式LINEから確定のご連絡と施術場所のご案内</li>
+      </ol>
+      <a class="btn btn-main" href="reserve.html">空き状況を見る・申し込む</a>
+    </div>
+    <div class="way">
+      <h3>公式LINEで直接やりとりする</h3>
+      <p>メッセージで日時のご相談をしながらご予約いただけます。</p>
+      <a class="btn btn-line js-line" href="#">公式LINEを開く</a>
+    </div>
+  </div>
+</section>
+
+<section class="blk">
+  <h2>Notice</h2><p class="ja">ご注意</p>
+  <div class="warn" style="font-size:14px">
+    持病がある方やお怪我をされている方などは、一度病院の先生へ施術をしてよいかの確認をとってください。<br>
+    妊娠されている方の施術はお断りしております。<br><br>
+    当店は国家資格を必要としないリラクゼーションを目的としています。医療・治療行為は一切いたしません。
+  </div>
+</section>
+
+<section class="blk">
+  <h2>Contact</h2><p class="ja">お問い合わせ・SNS</p>
+  <p class="lead" style="font-size:14px">最新情報はInstagramで。TikTokではライブ配信もしています。</p>
+  <div class="sns" id="sns"></div>
+</section>
+
+<footer>
+  <div class="n">Lapis Mayumi</div>
+  <div>リラクゼーションサロン</div>
+  <div style="margin-top:10px">© Lapis Mayumi</div>
+</footer>
+
+<div class="fix-cta" id="fixCta"><div class="in">
+  <a class="btn btn-main" href="reserve.html">Webで予約</a>
+  <a class="btn btn-line js-line" href="#">LINEで予約</a>
+</div></div>
+
+<script src="assets/config.js"></script>
+<script>
+(function () {
+  const C = LM.CONFIG;
+  const desc = { 60: "気になるところを集中して", 90: "全身をしっかりほぐす定番", 120: "時間を気にせず、とことん" };
+  document.getElementById("menu").innerHTML = C.COURSES.map((c) => `
+    <div class="item"><div class="min">${c.minutes}<small>分</small></div>
+      <div class="txt"><b>${c.label}</b><span>${desc[c.minutes] || ""}</span></div>
+      ${c.price ? `<div class="price">¥${c.price.toLocaleString()}</div>` : ""}</div>`).join("");
+  document.querySelectorAll(".js-line").forEach((a) => {
+    if (C.LINE_URL) a.href = C.LINE_URL; else a.classList.add("hidden");
+  });
+  document.getElementById("pay").innerHTML = (C.PAYMENTS || []).map((g) => `
+    <div class="g"><h3>${g.group}</h3><div class="chips">${g.items.map((x) => `<span>${x}</span>`).join("")}</div>
+      ${g.note ? `<p class="note">※${g.note}</p>` : ""}</div>`).join("");
+  const names = { instagram: "Instagram", tiktok: "TikTok", youtube: "YouTube" };
+  let sns = Object.keys(C.SNS).filter((k) => C.SNS[k])
+    .map((k) => `<a href="${C.SNS[k]}" target="_blank" rel="noopener">${names[k]}</a>`).join("");
+  if (C.LINE_URL) sns += `<a href="${C.LINE_URL}">公式LINE</a>`;
+  if (C.MAIL) sns += `<a href="mailto:${C.MAIL}">メール</a>`;
+  document.getElementById("sns").innerHTML = sns;
+  // 最初の予約ボタンが見えなくなったら、画面下に予約ボタンを出す
+  const fix = document.getElementById("fixCta");
+  if (!C.LINE_URL) fix.querySelector(".in").style.gridTemplateColumns = "1fr";
+  new IntersectionObserver((es) => fix.classList.toggle("show", !es[0].isIntersecting)).observe(document.querySelector(".hero .cta"));
+})();
+</script>
+</body>
+</html>

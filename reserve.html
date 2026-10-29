@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ご予約 | Lapis Mayumi</title>
+<meta name="description" content="Lapis Mayumi（リラクゼーションサロン）のご予約申し込みページです。">
+<meta name="theme-color" content="#12124f">
+<link rel="icon" href="assets/favicon.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Shippori+Mincho:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/reserve.css">
+</head>
+<body class="rsv">
+<!-- 夜空のヘッダー（1枚目は大きく、2・3枚目は細く） -->
+<header class="sky big" id="skyBig">
+  <svg class="deco" aria-hidden="true" viewBox="0 0 390 210" preserveAspectRatio="xMidYMid slice">
+    <g fill="#fff" opacity=".85"><circle cx="38" cy="40" r="1.2"/><circle cx="74" cy="92" r=".9"/><circle cx="300" cy="34" r="1.3"/><circle cx="352" cy="78" r="1"/><circle cx="330" cy="128" r=".8"/><circle cx="58" cy="150" r="1"/><circle cx="262" cy="60" r=".8"/><circle cx="120" cy="30" r=".8"/></g>
+    <path d="M336 22 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" fill="#fff" opacity=".9"/>
+    <path d="M48 98 l1.5 3.5 3.5 1.5 -3.5 1.5 -1.5 3.5 -1.5 -3.5 -3.5 -1.5 3.5 -1.5z" fill="#fff" opacity=".8"/>
+    <path d="M-10 190 C 40 176, 80 204, 130 190 S 220 176, 270 190 S 360 204, 400 188" fill="none" stroke="#fff" stroke-width="1.4" opacity=".7"/>
+    <path d="M60 202 C 90 194, 120 208, 150 200 M 220 202 C 250 194, 280 208, 310 200" fill="none" stroke="#fff" stroke-width="1.2" opacity=".5"/>
+  </svg>
+  <a class="in" href="index.html"><img src="assets/logo-640.png" alt="Lapis Mayumi"><span class="nm">Lapis Mayumi</span><span class="tg">ご予約のお申し込み</span></a>
+</header>
+<header class="sky small hidden" id="skySmall">
+  <a class="in" href="index.html"><img src="assets/logo-640.png" alt=""><span><span class="nm">Lapis Mayumi</span><span class="tg">ご予約のお申し込み</span></span></a>
+</header>
+<div id="demoBar" class="demo-bar hidden">見本モードで表示しています（申し込みはどこにも送られません）</div>
+
+<main class="wrap">
+  <nav class="flow3" aria-label="手順" id="flow">
+    <div class="st" data-i="0"><div class="dot"></div><span>メニュー・日時</span></div>
+    <div class="bar"></div>
+    <div class="st" data-i="1"><div class="dot"></div><span>お客様情報</span></div>
+    <div class="bar"></div>
+    <div class="st" data-i="2"><div class="dot"></div><span>LINEで送信</span></div>
+  </nav>
+
+  <!-- 1. メニュー・日時 -->
+  <section id="pagePick">
+    <div class="ttl"><span class="en">Menu</span><h2>コースを選ぶ</h2></div>
+    <div class="courses" id="courses"></div>
+    <p class="taxnote">料金はすべて税込です</p>
+
+    <div class="ttl"><span class="en">Date</span><h2>日時を選ぶ</h2><span class="hint">◎をタップ</span></div>
+    <div class="cal" id="cal">
+      <div class="cal-nav">
+        <button id="prevW" type="button">‹ 前の週</button>
+        <span class="range" id="range"></span>
+        <button id="nextW" type="button">次の週 ›</button>
+      </div>
+      <div id="grid"><div class="loading">空き状況を読み込んでいます…</div></div>
+    </div>
+    <div class="legend">
+      <span><svg aria-hidden="true" width="14" height="14" viewBox="0 0 22 22"><circle cx="11" cy="11" r="9" fill="none" stroke="#2f2fb5" stroke-width="2"/><circle cx="11" cy="11" r="4.6" fill="none" stroke="#2f2fb5" stroke-width="2"/></svg>ご予約いただけます</span>
+      <span><svg aria-hidden="true" width="10" height="10" viewBox="0 0 12 12"><path d="M1.5 1.5 L10.5 10.5 M10.5 1.5 L1.5 10.5" stroke="#9590b6" stroke-width="1.5" stroke-linecap="round"/></svg>ご予約いただけません</span>
+    </div>
+    <p class="swipe-hint">左右にスライドしても週を切り替えられます</p>
+    <p class="hours-note">Webでのご予約は <b>10:00〜17:00</b> の開始となります。<br>それ以外のお時間をご希望の方は、<a id="hoursLine" href="#">公式LINE</a>から直接お問い合わせください。</p>
+    <button class="wish-card" id="wishBtn" type="button">
+      <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="3" fill="none" stroke="#2f2fb5" stroke-width="1.6"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="#2f2fb5" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <span class="tx"><b>2か月より先のご希望はこちら</b><small>ご希望の日時をご記入いただけます</small></span>
+      <span class="arrow" aria-hidden="true">›</span>
+    </button>
+  </section>
+
+  <!-- 2. お客様情報 -->
+  <section id="pageForm" class="hidden">
+    <div class="sum-card" id="summary"></div>
+    <form id="form" class="card" novalidate>
+      <div class="field hidden" id="fWish">
+        <label for="wish">ご希望の日にち・時間<span class="req">必須</span></label>
+        <textarea id="wish" placeholder="例）1月15日（金）の14時ごろ／1月第3週の平日午後 など"></textarea>
+        <p class="note">第2希望まであると調整しやすくなります。</p>
+      </div>
+
+      <div class="field" id="fName">
+        <label for="name">お名前<span class="req">必須</span></label>
+        <input type="text" id="name" autocomplete="name" placeholder="例）山田 花子">
+      </div>
+      <div class="field" id="fKana">
+        <label for="kana">ふりがな<span class="req">必須</span></label>
+        <input type="text" id="kana" placeholder="例）やまだ はなこ">
+      </div>
+      <div class="field" id="fTel">
+        <label for="tel">連絡が取れる電話番号<span class="req">必須</span></label>
+        <input type="tel" id="tel" autocomplete="tel" inputmode="tel" placeholder="例）090-1234-5678">
+      </div>
+      <div class="field" id="fLine">
+        <label for="lineName">LINEのお名前（表示名）<span class="req">必須</span></label>
+        <input type="text" id="lineName" placeholder="LINEで表示されているお名前">
+        <p class="note">予約確定のご連絡を公式LINEからお送りするために使います</p>
+      </div>
+      <div class="field" id="fSource">
+        <label for="source">何を見てお知りになりましたか？<span class="req">必須</span></label>
+        <select id="source">
+          <option value="">選んでください</option>
+          <option>TikTok</option><option>YouTube</option><option>Instagram</option>
+          <option>ご紹介</option><option>その他</option>
+        </select>
+        <input type="text" id="sourceOther" class="hidden" placeholder="差し支えなければ具体的に" style="margin-top:8px">
+      </div>
+      <div class="field" id="fArea">
+        <label for="area">お住まい<span class="req">必須</span></label>
+        <input type="text" id="area" placeholder="例）愛知県大府市">
+        <p class="note">○県○市○区 までで大丈夫です</p>
+      </div>
+      <div class="field" id="fConcern">
+        <label for="concern">1番気になる箇所・気になること<span class="opt">任意</span></label>
+        <textarea id="concern" placeholder="例）肩こりがひどい、むくみが気になる など"></textarea>
+      </div>
+      <div class="field" id="fFirst">
+        <span class="lbl">ご利用は初めてですか？<span class="req">必須</span></span>
+        <div class="choice">
+          <label><input type="radio" name="first" value="はい">はい（初めて）</label>
+          <label><input type="radio" name="first" value="いいえ">いいえ</label>
+        </div>
+      </div>
+      <div class="field hidden" id="fPhoto">
+        <span class="lbl">撮影へのご協力<span class="req">必須</span></span>
+        <p class="note" style="margin:0 0 8px">施術風景の撮影にご協力いただけますか？（後ろ姿・マスク着用OK）</p>
+        <div class="choice">
+          <label><input type="radio" name="photo" value="はい">はい</label>
+          <label><input type="radio" name="photo" value="いいえ">いいえ</label>
+        </div>
+      </div>
+
+      <div class="warn">
+        <h3><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#6b5426" stroke-width="1.6"/><path d="M12 7.5v6M12 16.5v.5" stroke="#6b5426" stroke-width="1.8" stroke-linecap="round"/></svg>ご注意</h3>
+        持病がある方やお怪我をされている方などは、一度病院の先生へ施術をしてよいかの確認をとってください。妊娠されている方の施術はお断りしております。<br>
+        当店は国家資格を必要としないリラクゼーションを目的としています。医療・治療行為は一切いたしません。
+      </div>
+      <div class="field" id="fAgree">
+        <label class="agree"><input type="checkbox" id="agree">上記のご注意を確認しました</label>
+      </div>
+
+      <button class="btn btn-main" id="submitBtn" type="submit"><span id="submitTx">次へ（最後に公式LINEへ送信します）</span><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24"><path d="M12 3l1.8 5.4L19 10l-5.2 1.6L12 17l-1.8-5.4L5 10l5.2-1.6z" fill="#fff"/></svg></button>
+      <button class="btn btn-ghost" id="backBtn" type="button">日時を選び直す</button>
+    </form>
+  </section>
+
+  <!-- 3. LINEで送信（ここで送ってもらわないと、店主から連絡できない） -->
+  <section id="pageDone" class="hidden">
+    <div class="step-alert">
+      <span class="badge">あと1ステップ</span>
+      <h2>まだご予約は完了していません</h2>
+      <p>公式LINEへ<b>予約番号を送信</b>していただくと、<br>仮予約の受付が完了します。</p>
+    </div>
+    <div class="send-card">
+      <div class="rno"><small>予約番号</small><b id="rno"></b></div>
+      <dl id="doneSummary"></dl>
+      <a class="btn btn-line btn-send" id="sendLine" href="#">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24"><path d="M3 11.5 21 4l-7.5 17-2.5-7z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        公式LINEに予約番号を送る</a>
+      <ol class="how">
+        <li>上のボタンを押すと、公式LINEのトーク画面が開きます<small>（友だち追加がまだの方は、先に追加の画面が出ます）</small></li>
+        <li>入力欄に入っている文章を、そのまま<b>送信</b>してください</li>
+        <li>公式LINEから「受け付けました」とお返事が届きます</li>
+      </ol>
+      <p class="why">公式LINEは、お客様から一度メッセージをいただかないと、こちらからご連絡できない仕組みです。お手数ですが、必ず送信をお願いいたします。</p>
+      <details class="manual">
+        <summary>LINEが開かないときは</summary>
+        <p>公式LINEを友だち追加して、次の文章を送ってください。</p>
+        <div class="msgbox" id="sendText"></div>
+        <button class="btn btn-ghost" id="copyText" type="button">文章をコピーする</button>
+        <a class="btn btn-ghost" id="addFriend" href="#">公式LINEを友だち追加する</a>
+      </details>
+    </div>
+    <div class="after-card">
+      <h3>送信したあとの流れ</h3>
+      <p class="msg">ご予約のお申込み有難うございます。現在は仮予約となり、予約が確定次第LINEにてご連絡させて頂きます。その際に施術場所もご案内いたします。</p>
+    </div>
+  </section>
+</main>
+<div class="foot">© Lapis Mayumi</div>
+
+<script src="assets/config.js"></script>
+<script src="assets/slots.js"></script>
+<script src="assets/api.js"></script>
+<script src="assets/reserve.js"></script>
+</body>
+</html>
