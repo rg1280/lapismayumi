@@ -5,7 +5,7 @@ LM.CONFIG = {
 
   // Apps Script を「ウェブアプリ」として公開したURL（/exec で終わる）。
   // 空のままだと、端末の中だけで動く見本モード（データは保存されない）になる。
-  API_URL: "",
+  API_URL: "https://script.google.com/macros/s/AKfycbylbweYRb6vKZV-VSe2IZlJiLP1o43hdf7KiHdpR9cid8dEIz1IJz5qkgssekeWzryzdw/exec", // 2026-10-30 店主の Google（バージョン1）
 
   // LINE の LIFF ID（任意）。入れると、予約画面を開いた人の LINE の名前が自動で付く。
   LIFF_ID: "",
