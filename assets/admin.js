@@ -241,7 +241,14 @@
       ${b.external ? `<p class="note">Googleカレンダー（Life Bear）の予定です。消すときはLife Bearから消してください。</p>` :
         `<button class="btn btn-main" id="bDel" type="button">ふさぎを解除する</button>`}
       <button class="btn btn-ghost" id="bClose" type="button">閉じる</button>`);
-    if ($("bDel")) $("bDel").onclick = async () => { await api("unblock", { id: b.id }); await refresh(); closeSheet(); toast("解除しました"); };
+    // 裏側の返事（2回のやりとりで5秒ほど）を待たずに、先に画面から消す。失敗したら元に戻して知らせる
+    if ($("bDel")) $("bDel").onclick = async () => {
+      const before = data.blocks;
+      data.blocks = before.filter((x) => x !== b);
+      renderSchedule(); closeSheet(); toast("解除しました");
+      try { await api("unblock", { id: b.id }); refresh().catch(() => {}); }
+      catch (err) { data.blocks = before; renderSchedule(); toast("解除できませんでした：" + err.message); }
+    };
     $("bClose").onclick = closeSheet;
   }
   function openSheet(html) { $("sheet").innerHTML = html; $("sheetBg").classList.remove("hidden"); document.body.style.overflow = "hidden"; }
