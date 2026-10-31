@@ -12,7 +12,7 @@
   let data = null;
 
   // 店主の端末で新しい版が動いているかを確かめるための表示（直したら上げる）
-  if ($("ver")) $("ver").textContent = "画面の版：10/31-4";
+  if ($("ver")) $("ver").textContent = "画面の版：10/31-5";
   if (LM.isDemo) { $("demoBar").classList.remove("hidden"); $("resetDemo").classList.remove("hidden"); }
 
   // ---------- 共通 ----------
@@ -125,7 +125,7 @@
   // 確定：LINEで送る文面を作ってコピー
   function confirmText(r, place) {
     const c = C.COURSES.find((x) => x.minutes === r.minutes);
-    return `${r.name} 様\n\nこの度は${C.SALON_NAME}へご予約のお申込みをいただき、有難うございます。\n以下の内容でご予約が確定いたしました。\n\n日時：${fmtWhen(r)}\nコース：${c ? c.label : r.minutes + "分"}\n\n【施術場所】\n${place || "（場所を入れてください）"}\n\nキャンセルやご変更の際は、お早めにご連絡ください。\n当日お会いできるのを楽しみにしております。`;
+    return `${r.name} 様\n\nこの度は${C.SALON_NAME}へご予約のお申込みをいただき、有難うございます。\n以下の内容でご予約が確定いたしました。\n\n日時：${fmtWhen(r)}\nコース：${c ? c.label : r.minutes + "分"}\n\n【施術場所】\n${place || "（場所を入れてください）"}${C.PARKING_URL ? `\n\n【駐車場の写真】\n${C.PARKING_URL}` : ""}\n\nキャンセルやご変更の際は、お早めにご連絡ください。\n当日お会いできるのを楽しみにしております。`;
   }
   function openConfirm(r) {
     openSheet(`<h3>予約を確定する</h3>

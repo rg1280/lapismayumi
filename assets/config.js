@@ -14,6 +14,8 @@ LM.CONFIG = {
   LINE_URL: "https://line.me/R/ti/p/%40419orjtl",
   LINE_ID: "@419orjtl", // 予約画面の最後に、お客様がこの公式LINEへ予約番号を送る
   // ⚠ 施術場所（住所）はここに書かない。誰でも読めるファイルなので。決まり文は gas/Code.gs と assets/place_default.js
+  // 駐車場の写真のページ（確定のご連絡の最後にリンクを入れる。空なら入れない。2026-10-31 提案96）
+  PARKING_URL: "https://lapismayumi.taccweb.com/pk/8b784f94.html",
 
   // メールでのお問い合わせ先（空なら表示しない）
   MAIL: "mayumi0603r628@gmail.com",
