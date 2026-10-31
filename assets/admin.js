@@ -12,7 +12,7 @@
   let data = null;
 
   // 店主の端末で新しい版が動いているかを確かめるための表示（直したら上げる）
-  if ($("ver")) $("ver").textContent = "画面の版：10/31-3";
+  if ($("ver")) $("ver").textContent = "画面の版：10/31-4";
   if (LM.isDemo) { $("demoBar").classList.remove("hidden"); $("resetDemo").classList.remove("hidden"); }
 
   // ---------- 共通 ----------
