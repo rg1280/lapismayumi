@@ -184,15 +184,29 @@
   async function save(item, force) {
     if ((item.status === "確定" || item.status === "仮予約") && !item.start) { toast("日にちと開始時刻を入れてください"); return false; }
     if (!item.name) { toast("お名前を入れてください"); return false; }
+    // 重なりは手元の一覧で先に確かめる（裏側と同じ判定）。裏側の返事（5秒ほど）を待たずに画面へ反映する
+    if (!force && item.start && (item.status === "確定" || item.status === "仮予約")) {
+      const busy = data.reservations.filter((x) => x.id !== item.id && x.start && (x.status === "確定" || x.status === "仮予約"))
+        .map((x) => [x.start, x.start + x.minutes * 60000])
+        .concat(data.blocks.filter((b) => !b.allDay).map((b) => [b.start, b.end]));
+      if (!S.isAvailable(dayKeyOf(item.start), S.parts(item.start).min, item.minutes, { now: 0, busy, closed: [] })) {
+        if (!confirm("前後の予約・予定と重なっています（間を1時間空ける決まり）。\nそれでも入れますか？")) return false;
+        force = true;
+      }
+    }
+    const before = data.reservations;
+    const tmp = Object.assign({}, item, { id: item.id || "保存中" + Date.now() });
+    data.reservations = before.filter((x) => x.id !== item.id).concat([tmp]);
+    renderTodo(); renderSchedule();
+    sendSave(item, force, before);
+    return true;
+  }
+  async function sendSave(item, force, before) {
     let res;
     try { res = await api("save", { item, force: !!force }); } catch (e) { res = { ok: false, error: e.message, conflict: /重な/.test(e.message) }; }
-    if (!res.ok && res.conflict) {
-      if (!confirm(res.error + "\nそれでも入れますか？")) return false;
-      return save(item, true);
-    }
-    if (!res.ok) { toast(res.error); return false; }
-    await refresh();
-    return true;
+    if (!res.ok && res.conflict && confirm(res.error + "\nそれでも入れますか？")) return sendSave(item, true, before);
+    if (!res.ok) { data.reservations = before; renderTodo(); renderSchedule(); toast("保存できませんでした：" + res.error); return; }
+    refresh().catch(() => {});
   }
 
   // 追加タブ
@@ -221,8 +235,12 @@
       item.end = S.msOf(y, m, d, S.toMin($("bEnd").value || "10:00"));
       if (item.end <= item.start) { toast("終了は開始より後にしてください"); return; }
     }
-    try { await api("block", { item }); await refresh(); toast("ふさぎました"); $("blockForm").reset(); $("bTimes").classList.remove("hidden"); }
-    catch (err) { toast(err.message); }
+    // 予約と同じく、裏側の返事を待たずに先に画面へ出す
+    const before = data.blocks;
+    data.blocks = before.concat([Object.assign({ id: "保存中" + Date.now() }, item)]);
+    renderSchedule(); toast("ふさぎました"); $("blockForm").reset(); $("bTimes").classList.remove("hidden");
+    try { await api("block", { item }); refresh().catch(() => {}); }
+    catch (err) { data.blocks = before; renderSchedule(); toast("ふさげませんでした：" + err.message); }
   });
 
   // 変更（下から出る画面）
@@ -295,6 +313,7 @@
   $("showPast").onchange = renderSchedule;
   $("schedule").addEventListener("click", (e) => {
     const row = e.target.closest(".row"); if (!row) return;
+    if (/^保存中/.test(row.dataset.r || row.dataset.b || "")) { toast("保存しています。数秒お待ちください"); return; }
     if (row.dataset.r) openEdit(data.reservations.find((x) => x.id === row.dataset.r));
     if (row.dataset.b) openBlock(data.blocks.find((x) => String(x.id) === row.dataset.b));
   });
