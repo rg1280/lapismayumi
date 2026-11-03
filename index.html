@@ -68,6 +68,7 @@
   .fix-cta { position: fixed; left: 0; right: 0; bottom: 0; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); background: rgba(255,255,255,.95); border-top: 1px solid var(--line); display: none; z-index: 10; }
   .fix-cta .in { max-width: 560px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .fix-cta .btn { padding: 12px; font-size: 14px; }
+  .fix-cta .btn + .btn { margin-top: 0; } /* 横並びなので縦のすき間を消す（2026-11-03 2つ目だけ下にずれていた） */
   .fix-cta.show { display: block; }
 </style>
 </head>
