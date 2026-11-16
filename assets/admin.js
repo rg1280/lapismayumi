@@ -10,9 +10,10 @@
 
   let key = store.get();
   let data = null;
+  let hasBook = false;
 
   // 店主の端末で新しい版が動いているかを確かめるための表示（直したら上げる）
-  if ($("ver")) $("ver").textContent = "画面の版：10/31-5";
+  if ($("ver")) $("ver").textContent = "画面の版：11/16-1";
   if (LM.isDemo) { $("demoBar").classList.remove("hidden"); $("resetDemo").classList.remove("hidden"); }
 
   // ---------- 共通 ----------
@@ -56,6 +57,8 @@
 
   async function refresh() {
     data = await api("list");
+    hasBook = !!data.saleOf; // 裏側に gas/経理.gs が入るまでは帳簿を出さない
+    document.querySelector('#tabbar button[data-tab="tabBook"]').classList.toggle("hidden", !hasBook);
     renderTodo(); renderSchedule(); renderSettings();
   }
 
@@ -64,7 +67,8 @@
     const b = e.target.closest("button[data-tab]");
     if (!b) return;
     document.querySelectorAll("#tabbar button").forEach((x) => x.classList.toggle("on", x === b));
-    ["tabTodo", "tabList", "tabAdd", "tabSet"].forEach((id) => $(id).classList.toggle("hidden", id !== b.dataset.tab));
+    ["tabTodo", "tabList", "tabAdd", "tabBook", "tabSet"].forEach((id) => $(id).classList.toggle("hidden", id !== b.dataset.tab));
+    if (b.dataset.tab === "tabBook") LM.keiri.show();
     window.scrollTo(0, 0);
   });
 
@@ -247,13 +251,18 @@
 
   // 変更（下から出る画面）
   function openEdit(r) {
-    openSheet(`<h3>予約の変更</h3>${resFormHtml(r, "e")}
+    const saleId = hasBook && data.saleOf[r.id];
+    const canDone = hasBook && r.start && r.status === "確定" && dayKeyOf(r.start) <= dayKeyOf(Date.now());
+    openSheet(`<h3>予約の変更</h3>
+      ${saleId || canDone ? `<button class="btn btn-main" id="eDone" type="button">${saleId ? "売上を見る・直す" : "施術完了（売上を記録）"}</button>` : ""}
+      ${resFormHtml(r, "e")}
       <button class="btn btn-main" id="eSave" type="button">保存する</button>
       ${r.status !== "キャンセル" ? `<button class="btn btn-ghost" id="eCancel" type="button">キャンセルにする</button>` : ""}
       <button class="btn btn-ghost" id="eClose" type="button">閉じる</button>`);
     $("eSave").onclick = async () => { if (await save(readRes(r, "e"))) { closeSheet(); toast("保存しました"); } };
     if ($("eCancel")) $("eCancel").onclick = () => cancelRes(r);
     $("eClose").onclick = closeSheet;
+    if ($("eDone")) $("eDone").onclick = () => LM.keiri.fromReservation(r, saleId);
   }
   function openBlock(b) {
     openSheet(`<h3>ふさいだ時間</h3>
@@ -303,7 +312,7 @@
       if (it.kind === "r") {
         const r = it.r;
         html += `<div class="row ${r.status === "キャンセル" ? "dim" : ""}" data-r="${r.id}"><div class="t">${timeOf(r.start)}〜${timeOf(r.start + r.minutes * 60000)}</div>
-          <div class="d"><span class="tag ${tagOf(r.status)}">${r.status}</span>${esc(r.name)} 様　${r.minutes}分</div></div>`;
+          <div class="d"><span class="tag ${tagOf(r.status)}">${r.status}</span>${esc(r.name)} 様　${r.minutes}分${saleTag(r)}</div></div>`;
       } else {
         const b = it.b;
         html += `<div class="row" data-b="${esc(b.id)}"><div class="t">${b.allDay ? "終日" : `${timeOf(b.start)}〜${timeOf(b.end)}`}</div>
@@ -311,6 +320,11 @@
       }
     });
     $("schedule").innerHTML = html;
+  }
+  // 終わった確定の予約に、売上を入れたかの印
+  function saleTag(r) {
+    if (!hasBook || r.status !== "確定" || dayKeyOf(r.start) > dayKeyOf(Date.now())) return "";
+    return data.saleOf[r.id] ? `<span class="tag kaku" style="margin-left:6px">売上済</span>` : `<span class="tag soudan" style="margin-left:6px">売上未記録</span>`;
   }
   $("showPast").onchange = renderSchedule;
   $("schedule").addEventListener("click", (e) => {
@@ -336,5 +350,6 @@
   };
 
   renderAddForm();
+  LM.keiri.init({ api, toast, openSheet, closeSheet, esc, dayKeyOf, refresh: () => refresh() });
   start();
 })();

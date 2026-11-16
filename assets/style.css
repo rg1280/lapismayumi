@@ -98,7 +98,7 @@ h2.sec small { font-family: var(--sans); font-size: 12px; color: var(--sub); fon
 .req { display: inline-block; background: var(--sun); color: #fff; font-size: 10px; border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; font-weight: 500; }
 .opt { display: inline-block; background: #e9e9f0; color: var(--sub); font-size: 10px; border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; font-weight: 500; }
 .note { font-size: 12px; color: var(--sub); margin: 4px 0 0; }
-input[type=text], input[type=tel], input[type=date], input[type=time], input[type=password], select, textarea {
+input[type=text], input[type=tel], input[type=date], input[type=time], input[type=password], input[type=number], select, textarea {
   width: 100%; border: 1.5px solid var(--line); border-radius: 10px; padding: 11px 12px; background: #fff; font-size: 16px;
 }
 textarea { min-height: 84px; resize: vertical; }

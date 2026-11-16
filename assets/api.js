@@ -80,8 +80,10 @@
     needKey(p);
     if (action === "login") return { ok: true };
     if (action === "list") {
+      const saleOf = {};
+      (db.sales || []).forEach((s) => { if (s.resId && s.state !== "取消") saleOf[s.resId] = s.id; });
       return { ok: true, now: Date.now(), reservations: db.reservations, blocks: db.blocks, settings: db.settings,
-               closed: closedOf(db), holidays: HOLIDAYS };
+               closed: closedOf(db), holidays: HOLIDAYS, saleOf };
     }
     if (action === "save") {
       const r = p.item;
@@ -116,6 +118,34 @@
       save(db);
       return { ok: true, settings: db.settings };
     }
+    // ---------- 経理（見本。裏側は gas/経理.gs） ----------
+    db.sales = db.sales || []; db.expenses = db.expenses || [];
+    db.keiri = db.keiri || LM.keiriDefaults();
+    if (action === "keiriList") {
+      const y = String(p.year || S.parts(Date.now()).y);
+      return { ok: true, year: Number(y), sales: db.sales.filter((r) => r.day.indexOf(y) === 0),
+               expenses: db.expenses.filter((r) => r.day.indexOf(y) === 0), settings: db.keiri };
+    }
+    if (action === "saleSave" || action === "expenseSave") {
+      const list = action === "saleSave" ? db.sales : db.expenses;
+      const it = Object.assign({}, p.item, { state: "有効", updatedAt: Date.now() });
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(it.day || "")) throw new Error("日付を入れてください");
+      if (!(Number(it.amount) >= 0) || it.amount === "") throw new Error("金額を正しく入れてください");
+      it.amount = Math.round(Number(it.amount));
+      if (action === "saleSave" && !it.id && it.resId && list.some((x) => x.resId === it.resId && x.state !== "取消")) throw new Error("この予約の売上はもう記録されています");
+      if (p.image && p.image.data) { it.imageUrl = "data:" + p.image.type + ";base64," + p.image.data.slice(0, 0) + "#見本"; it.imageId = "demo" + Date.now(); }
+      if (it.id) { const i = list.findIndex((x) => x.id === it.id); if (!it.imageId) { it.imageUrl = list[i].imageUrl; it.imageId = list[i].imageId; } list[i] = Object.assign(list[i], it); }
+      else { it.id = (action === "saleSave" ? "S" : "E") + String(list.length + 1).padStart(5, "0"); it.createdAt = Date.now(); list.push(it); }
+      save(db);
+      return { ok: true, id: it.id };
+    }
+    if (action === "keiriDelete") {
+      const list = p.kind === "expense" ? db.expenses : db.sales;
+      const r = list.find((x) => x.id === p.id); if (r) r.state = "取消";
+      save(db);
+      return { ok: true };
+    }
+    if (action === "keiriSettings") { db.keiri = Object.assign(db.keiri, p.settings); save(db); return { ok: true, settings: db.keiri }; }
     throw new Error("不明な操作です: " + action);
   }
 

@@ -17,8 +17,8 @@
 <meta name="theme-color" content="#0d0d45">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=Shippori+Mincho:wght@500;600&display=swap">
-<link rel="stylesheet" href="assets/style.css">
-<link rel="stylesheet" href="assets/admin.css">
+<link rel="stylesheet" href="assets/style.css?v=20261116">
+<link rel="stylesheet" href="assets/admin.css?v=20261116">
 </head>
 <body class="admin">
 <header class="top"><div class="in">
@@ -68,6 +68,34 @@
     </form>
   </section>
 
+  <!-- 帳簿（2026-11-16 追加。売上・経費・freee 用のファイル） -->
+  <section id="tabBook" class="hidden">
+    <h2 class="sec">帳簿<small><select id="kYear" class="k-year"></select></small></h2>
+    <div class="seg" id="kSeg"><button type="button" class="on" data-k="sale">売上</button><button type="button" data-k="exp">経費</button><button type="button" data-k="out">freee用</button></div>
+    <div id="kSale">
+      <button class="btn btn-main" id="kAddSale" type="button">売上を入れる（予約なし）</button>
+      <p class="note">予約のお客様は「予定表」で予約を押し、「施術完了」から入れると早いです。</p>
+      <div id="kSaleList"></div>
+    </div>
+    <div id="kExp" class="hidden">
+      <button class="btn btn-main" id="kAddExp" type="button">経費を入れる</button>
+      <div id="kExpList" style="margin-top:12px"></div>
+    </div>
+    <div id="kOut" class="hidden">
+      <div class="card">
+        <p class="note" style="margin-top:0">freee の「取引データのインポート」に入れるファイルを作ります。</p>
+        <div class="two">
+          <div class="field"><label for="kFrom">いつから</label><input type="date" id="kFrom"></div>
+          <div class="field"><label for="kTo">いつまで</label><input type="date" id="kTo"></div>
+        </div>
+        <p class="note" id="kOutCount"></p>
+        <button class="btn btn-main" id="kDl" type="button">freee用のファイルを作る</button>
+        <p class="note">⚠ 同じ期間を2回取り込むと、freee に二重に入ります。取り込んだ期間は控えておいてください。</p>
+      </div>
+      <details class="card" style="margin-top:14px"><summary>取り込みの設定（最初に一度だけ）</summary><div id="kMap" style="margin-top:12px"></div></details>
+    </div>
+  </section>
+
   <!-- 設定 -->
   <section id="tabSet" class="hidden">
     <h2 class="sec">設定</h2>
@@ -95,6 +123,7 @@
   <button type="button" data-tab="tabTodo" class="on"><i>☾</i>要対応<em id="badge" class="hidden"></em></button>
   <button type="button" data-tab="tabList"><i>▤</i>予定表</button>
   <button type="button" data-tab="tabAdd"><i>＋</i>追加</button>
+  <button type="button" data-tab="tabBook" class="hidden"><i>¥</i>帳簿</button>
   <button type="button" data-tab="tabSet"><i>⚙</i>設定</button>
 </nav>
 
@@ -103,7 +132,8 @@
 
 <script src="assets/config.js?v=20261031e"></script>
 <script src="assets/slots.js"></script>
-<script src="assets/api.js"></script>
-<script src="assets/admin.js?v=20261031e"></script>
+<script src="assets/api.js?v=20261116"></script>
+<script src="assets/keiri.js?v=20261116"></script>
+<script src="assets/admin.js?v=20261116"></script>
 </body>
 </html>
