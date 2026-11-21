@@ -48,8 +48,9 @@
     const e = s + minutes * MIN;
     if (s < ctx.now + C.LEAD_HOURS * 60 * MIN) return false;
     const buf = C.BUFFER_MIN * MIN;
-    for (const [bs, be] of ctx.busy) {
-      if (s < be + buf && bs < e + buf) return false;
+    for (const [bs, be, noBuf] of ctx.busy) {
+      const g = noBuf ? 0 : buf; // 3つ目が 1 ＝私用・お休み：前後の空きは要らない（2026-11-21 岩崎さん）
+      if (s < be + g && bs < e + g) return false;
     }
     return true;
   }

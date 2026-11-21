@@ -13,7 +13,7 @@
   let hasBook = false;
 
   // 店主の端末で新しい版が動いているかを確かめるための表示（直したら上げる）
-  if ($("ver")) $("ver").textContent = "画面の版：11/16-1";
+  if ($("ver")) $("ver").textContent = "画面の版：11/21-1";
   if (LM.isDemo) { $("demoBar").classList.remove("hidden"); $("resetDemo").classList.remove("hidden"); }
 
   // ---------- 共通 ----------
@@ -194,7 +194,7 @@
     if (!force && item.start && (item.status === "確定" || item.status === "仮予約")) {
       const busy = data.reservations.filter((x) => x.id !== item.id && x.start && (x.status === "確定" || x.status === "仮予約"))
         .map((x) => [x.start, x.start + x.minutes * 60000])
-        .concat(data.blocks.filter((b) => !b.allDay).map((b) => [b.start, b.end]));
+        .concat(data.blocks.filter((b) => !b.allDay).map((b) => [b.start, b.end, 1]));
       if (!S.isAvailable(dayKeyOf(item.start), S.parts(item.start).min, item.minutes, { now: 0, busy, closed: [] })) {
         if (!confirm("前後の予約・予定と重なっています（間を1時間空ける決まり）。\nそれでも入れますか？")) return false;
         force = true;

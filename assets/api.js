@@ -49,7 +49,7 @@
     const busy = db.reservations
       .filter((r) => r.start && (r.status === "仮予約" || r.status === "確定") && r.id !== exceptId)
       .map((r) => [r.start, r.start + r.minutes * 60000]);
-    db.blocks.filter((b) => !b.allDay).forEach((b) => busy.push([b.start, b.end]));
+    db.blocks.filter((b) => !b.allDay).forEach((b) => busy.push([b.start, b.end, 1]));
     return busy;
   }
   function closedOf(db) {
