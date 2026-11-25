@@ -82,8 +82,10 @@
     if (action === "list") {
       const saleOf = {};
       (db.sales || []).forEach((s) => { if (s.resId && s.state !== "取消") saleOf[s.resId] = s.id; });
+      const karteOf = {};
+      (db.kartes || []).forEach((k) => { if (k.resId && k.state !== "取消") karteOf[k.resId] = k.id; });
       return { ok: true, now: Date.now(), reservations: db.reservations, blocks: db.blocks, settings: db.settings,
-               closed: closedOf(db), holidays: HOLIDAYS, saleOf };
+               closed: closedOf(db), holidays: HOLIDAYS, saleOf, karteOf };
     }
     if (action === "save") {
       const r = p.item;
@@ -124,7 +126,7 @@
     if (action === "keiriList") {
       const y = String(p.year || S.parts(Date.now()).y);
       return { ok: true, year: Number(y), sales: db.sales.filter((r) => r.day.indexOf(y) === 0),
-               expenses: db.expenses.filter((r) => r.day.indexOf(y) === 0), settings: db.keiri };
+               expenses: db.expenses.filter((r) => r.day.indexOf(y) === 0), settings: db.keiri, photo: true };
     }
     if (action === "saleSave" || action === "expenseSave") {
       const list = action === "saleSave" ? db.sales : db.expenses;
@@ -146,6 +148,28 @@
       return { ok: true };
     }
     if (action === "keiriSettings") { db.keiri = Object.assign(db.keiri, p.settings); save(db); return { ok: true, settings: db.keiri }; }
+    // ---------- カルテ（見本。裏側は gas/カルテ.gs） ----------
+    db.kartes = db.kartes || [];
+    if (action === "karteList") {
+      const nm = (s) => String(s || "").normalize("NFKC").replace(/\s/g, "").replace(/(様|さま|さん)$/, "").toLowerCase();
+      const tl = (s) => String(s || "").normalize("NFKC").replace(/\D/g, "");
+      let list = db.kartes.filter((k) => k.state !== "取消");
+      if (p.name || p.resId || p.saleId) list = list.filter((k) => (p.resId && k.resId === p.resId) || (p.saleId && k.saleId === p.saleId)
+        || (nm(p.name) && nm(p.name) === nm(k.name) && (!tl(p.tel) || !tl(k.tel) || tl(p.tel) === tl(k.tel))));
+      else if (p.q) list = list.filter((k) => nm(k.name + k.treat + k.talk + k.next).indexOf(nm(p.q)) >= 0);
+      list = list.slice().sort((x, y) => (y.day + y.id).localeCompare(x.day + x.id));
+      return { ok: true, list: JSON.parse(JSON.stringify(list)) };
+    }
+    if (action === "karteSave") {
+      const it = Object.assign({}, p.item, { state: "有効", updatedAt: Date.now() });
+      if (!it.name) throw new Error("カルテにはお名前を入れてください");
+      const i = db.kartes.findIndex((k) => k.id === it.id);
+      if (i >= 0) { ["resId", "saleId", "tel"].forEach((k) => { it[k] = it[k] || db.kartes[i][k]; }); db.kartes[i] = Object.assign(db.kartes[i], it); }
+      else { it.id = "K" + String(db.kartes.length + 1).padStart(5, "0"); it.createdAt = Date.now(); db.kartes.push(it); }
+      save(db);
+      return { ok: true, id: it.id };
+    }
+    if (action === "karteDelete") { const k = db.kartes.find((x) => x.id === p.id); if (k) k.state = "取消"; save(db); return { ok: true }; }
     throw new Error("不明な操作です: " + action);
   }
 

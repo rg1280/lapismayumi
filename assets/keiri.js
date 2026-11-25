@@ -37,10 +37,11 @@
     const ys = [year - 1, year, year + 1].filter((y) => y >= 2026);
     $("kYear").innerHTML = ys.map((y) => `<option value="${y}" ${y === year ? "selected" : ""}>${y}年</option>`).join("");
     document.querySelectorAll("#kSeg button").forEach((b) => b.classList.toggle("on", b.dataset.k === seg));
-    ["kSale", "kExp", "kOut"].forEach((id) => $(id).classList.add("hidden"));
+    ["kSale", "kExp", "kOut", "kKarte"].forEach((id) => $(id).classList.add("hidden"));
     if (seg === "sale") renderSales();
     if (seg === "exp") renderExpenses();
     if (seg === "out") renderOut();
+    if (seg === "karte") { $("kKarte").classList.remove("hidden"); LM.karte.showList(); }
   }
   function monthGroups(list, rowHtml) {
     const live = list.filter((r) => r.state !== "取消").sort((a, b) => (b.day + b.id).localeCompare(a.day + a.id));
@@ -77,7 +78,7 @@
     const minutes = s ? s.minutes : r ? r.minutes : "";
     const course = C.COURSES.find((c) => c.minutes === Number(minutes));
     const it = s || { day: r ? A.dayKeyOf(r.start) : todayKey(), name: r ? r.name : "", minutes, amount: course ? course.price : "", method: "現金", memo: "", resId: r ? r.id : "" };
-    A.openSheet(`<h3>${s ? "売上を直す" : r ? "施術完了（売上を記録）" : "売上を入れる"}</h3>
+    A.openSheet(`<h3>${s ? (A.hasKarte() ? "売上・カルテを直す" : "売上を直す") : r ? "施術完了" : "売上を入れる"}</h3>
       <div class="two">
         <div class="field"><label for="kDay">日付</label><input type="date" id="kDay" value="${A.esc(it.day)}"></div>
         <div class="field"><label for="kMin">コース</label><select id="kMin"><option value="">なし・その他</option>${C.COURSES.map((c) => `<option value="${c.minutes}" ${c.minutes === Number(it.minutes) ? "selected" : ""}>${c.label}</option>`).join("")}</select></div>
@@ -88,14 +89,39 @@
         <div class="field"><label for="kPay">支払方法</label><select id="kPay">${opt(SALE_METHODS, it.method)}</select></div>
       </div>
       <div class="field"><label for="kMemo">メモ（割引の理由など）</label><input type="text" id="kMemo" value="${A.esc(it.memo)}"></div>
+      ${A.hasKarte() ? `<h4 class="kt-h">カルテ<small>書かなくても保存できます</small></h4><div id="kKarteForm"></div>` : ""}
       <button class="btn btn-main" id="kSave" type="button">保存する</button>
       ${s ? `<button class="btn btn-ghost" id="kDel" type="button">この売上を取り消す</button>` : ""}
       <button class="btn btn-ghost" id="kClose" type="button">閉じる</button>
       <p class="note">金額は割引などがあれば、実際に受け取った金額に直してください。</p>`);
     $("kMin").onchange = () => { const c = C.COURSES.find((x) => x.minutes === Number($("kMin").value)); if (c && c.price) $("kAmt").value = c.price; };
     $("kClose").onclick = A.closeSheet;
-    $("kSave").onclick = () => send("saleSave", { item: { id: s ? s.id : "", resId: it.resId || "", day: $("kDay").value, name: $("kName").value.trim(),
-      minutes: $("kMin").value, amount: $("kAmt").value, method: $("kPay").value, memo: $("kMemo").value.trim() } }, $("kSave"));
+    const res = r || (it.resId ? A.resOf(it.resId) : null);
+    const karte = A.hasKarte() ? LM.karte.form($("kKarteForm"), { resId: it.resId || "", saleId: s ? s.id : "", tel: res ? res.tel : "",
+      day: () => $("kDay").value, name: () => $("kName").value.trim() }) : null;
+    if (karte) $("kName").onchange = () => karte.renamed();
+    let savedId = s ? s.id : ""; // 売上だけ入ってカルテで止まったとき、もう一度押しても売上が二重にならないように
+    $("kSave").onclick = async () => {
+      const btn = $("kSave");
+      if (karte && karte.wait()) { A.toast("カルテを読み込んでいます。数秒お待ちください"); return; }
+      const ng = karte && karte.check();
+      if (ng) { A.toast(ng); return; }
+      btn.disabled = true; btn.textContent = "保存しています…";
+      let step = "売上";
+      try {
+        const out = await A.api("saleSave", { item: { id: savedId, resId: it.resId || "", day: $("kDay").value, name: $("kName").value.trim(),
+          minutes: $("kMin").value, amount: $("kAmt").value, method: $("kPay").value, memo: $("kMemo").value.trim() } });
+        savedId = out.id;
+        if (karte) { step = "カルテ"; await karte.save(savedId); }
+      } catch (err) {
+        btn.disabled = false; btn.textContent = "保存する";
+        A.toast((step === "カルテ" ? "売上は保存しました。カルテを保存できませんでした：" : "保存できませんでした：") + err.message);
+        return;
+      }
+      A.closeSheet(); A.toast("保存しました");
+      load().catch((err) => A.toast(err.message));
+      A.refresh().catch(() => {}); // 予定表の「売上済」「カルテ」を更新
+    };
     if ($("kDel")) $("kDel").onclick = () => { if (confirm("この売上を取り消しますか？（表には「取消」として残り、freee用のファイルには出ません）")) send("keiriDelete", { kind: "sale", id: s.id }, $("kDel")); };
   }
 
@@ -113,7 +139,7 @@
         <div class="field"><label for="xPayee">お店・支払先</label><input type="text" id="xPayee" value="${A.esc(it.payee)}" placeholder="例）ダイソー"></div>
         <div class="field"><label for="xPay">支払方法</label><select id="xPay">${opt(EXP_METHODS, it.method)}</select></div>
       </div>
-      <div class="field"><label for="xImg">レシート・領収書の写真</label><input type="file" id="xImg" accept="image/*">
+      <div class="field${book.photo ? "" : " hidden"}"><label for="xImg">レシート・領収書の写真</label><input type="file" id="xImg" accept="image/*">
         ${it.imageUrl && !/#見本$/.test(it.imageUrl) ? `<p class="note"><a href="${A.esc(it.imageUrl)}" target="_blank" rel="noopener">保存済みの写真を見る</a>（選び直すと差し替わります）</p>` : it.imageId ? `<p class="note">写真は保存済みです（選び直すと差し替わります）</p>` : ""}</div>
       <div class="field"><label for="xMemo">メモ（何を買ったか）</label><input type="text" id="xMemo" value="${A.esc(it.memo)}" placeholder="例）施術用のタオル"></div>
       <button class="btn btn-main" id="xSave" type="button">保存する</button>
